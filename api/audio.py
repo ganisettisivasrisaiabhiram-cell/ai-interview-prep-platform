@@ -155,33 +155,9 @@ class STTManager:
         return chat
 
     def transcribe_numpy_array(self, audio: np.ndarray, context: Optional[str] = None) -> str:
-        """
-        Transcribe audio data using the configured STT service.
+                return""
 
-        Args:
-            audio (np.ndarray): Audio data as a numpy array.
-            context (Optional[str]): Optional context for transcription.
-
-        Returns:
-            str: Transcribed text.
-
-        Raises:
-            APIError: If there's an unexpected error during transcription.
-        """
-        transcription_methods = {
-            "OPENAI_API": self._transcribe_openai,
-            "HF_API": self._transcribe_hf_api,
-            "HF_LOCAL": self._transcribe_hf_local,
-        }
-
-        try:
-            transcribe_method = transcription_methods.get(self.config.stt.type)
-            if transcribe_method:
-                return transcribe_method(audio, context)
-            else:
-                raise APIError(f"Unsupported STT type: {self.config.stt.type}")
-        except Exception as e:
-            raise APIError(f"STT Error: Unexpected error: {e}")
+        
 
     def _transcribe_openai(self, audio: np.ndarray, context: Optional[str]) -> str:
         """
@@ -284,34 +260,10 @@ class TTSManager:
             return False
 
     def read_text(self, text: str, stream: Optional[bool] = None) -> Generator[bytes, None, None]:
-        """
-        Convert text to speech using the configured TTS service.
+                yield b""
+                return
 
-        Args:
-            text (str): Text to convert to speech.
-            stream (Optional[bool]): Whether to stream the audio. Defaults to self.streaming if not provided.
 
-        Yields:
-            bytes: Audio data in bytes.
-
-        Raises:
-            APIError: If there's an unexpected error during text-to-speech conversion.
-        """
-        if not text:
-            yield b""
-            return
-
-        stream = self.streaming if stream is None else stream
-
-        headers = {"Authorization": f"Bearer {self.config.tts.key}"}
-        data = {"model": self.config.tts.name, "input": text, "voice": "alloy", "response_format": "opus"}
-
-        try:
-            yield from self._read_text_stream(headers, data) if stream else self._read_text_non_stream(headers, data)
-        except APIError:
-            raise
-        except Exception as e:
-            raise APIError(f"TTS Error: Unexpected error: {e}")
 
     def _read_text_non_stream(self, headers: dict, data: dict) -> Generator[bytes, None, None]:
         """

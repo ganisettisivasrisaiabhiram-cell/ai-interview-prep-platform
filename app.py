@@ -45,7 +45,7 @@ def create_interface(llm, tts, stt, audio_params):
     Returns:
         gr.Blocks: Configured Gradio interface.
     """
-    with gr.Blocks(title="AI Interviewer", theme=gr.themes.Default()) as demo:
+    with gr.Blocks(title="Ai Interview Preparation Platform", theme=gr.themes.Default()) as demo:
         # Create audio output component (visible only in debug mode)
         audio_output = gr.Audio(label="Play audio", autoplay=True, visible=os.environ.get("DEBUG", False), streaming=tts.streaming)
 
@@ -64,7 +64,7 @@ def main():
     demo = create_interface(llm, tts, stt, default_audio_params)
 
     # Launch the Gradio interface
-    demo.launch(show_api=False)
+    demo.launch(show_api=False, server_name="127.0.0.1", server_port=7860)
 
 
 if __name__ == "__main__":
