@@ -7,6 +7,7 @@ from utils.config import Config
 from resources.prompts import prompts
 from ui.coding import get_problem_solving_ui
 from ui.instructions import get_instructions_ui
+from ui.resume import get_resume_ui
 from utils.params import default_audio_params
 
 
@@ -45,13 +46,22 @@ def create_interface(llm, tts, stt, audio_params):
     Returns:
         gr.Blocks: Configured Gradio interface.
     """
-    with gr.Blocks(title="Ai Interview Preparation Platform", theme=gr.themes.Default()) as demo:
+    with gr.Blocks(title="AI Interview Preparation Platform", theme=gr.themes.Soft(), css="""
+    .gradio-container {
+        max-width: 900px !important;
+        margin: auto !important;
+    }
+    button.primary {
+        border-radius: 8px !important;
+    }
+""") as demo:
         # Create audio output component (visible only in debug mode)
         audio_output = gr.Audio(label="Play audio", autoplay=True, visible=os.environ.get("DEBUG", False), streaming=tts.streaming)
 
         # Render problem-solving and instructions UI components
         get_problem_solving_ui(llm, tts, stt, audio_params, audio_output).render()
         get_instructions_ui(llm, tts, stt, audio_params).render()
+        get_resume_ui(llm)
 
     return demo
 
@@ -64,7 +74,7 @@ def main():
     demo = create_interface(llm, tts, stt, default_audio_params)
 
     # Launch the Gradio interface
-    demo.launch(show_api=False, server_name="127.0.0.1", server_port=7860)
+    demo.launch(show_api=False, server_name="127.0.0.1", server_port=7860, auth=[("student", "student123"), ("teacher", "teacher123")], auth_message="Demo login — Student: student / student123  |  Teacher: teacher / teacher123")
 
 
 if __name__ == "__main__":
