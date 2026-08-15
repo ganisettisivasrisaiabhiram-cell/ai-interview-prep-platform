@@ -8,25 +8,19 @@ from resources.prompts import prompts
 from ui.coding import get_problem_solving_ui
 from ui.instructions import get_instructions_ui
 from ui.resume import get_resume_ui
+from utils.auth_db import init_db, register_user, check_login
 from utils.params import default_audio_params
+from ui.login import get_login_ui
 
 
 def initialize_services():
-    """
-    Initialize configuration, LLM, TTS, and STT services.
-
-    Returns:
-        tuple: Containing Config, LLMManager, TTSManager, and STTManager instances.
-    """
     config = Config()
     llm = LLMManager(config, prompts)
     tts = TTSManager(config)
     stt = STTManager(config)
 
-    # Update default audio parameters with STT streaming setting
     default_audio_params["streaming"] = stt.streaming
 
-    # Disable TTS in silent mode
     if os.getenv("SILENT", False):
         tts.read_last_message = lambda x: None
 
@@ -34,18 +28,6 @@ def initialize_services():
 
 
 def create_interface(llm, tts, stt, audio_params):
-    """
-    Create and configure the Gradio interface.
-
-    Args:
-        llm (LLMManager): Language model manager instance.
-        tts (TTSManager): Text-to-speech manager instance.
-        stt (STTManager): Speech-to-text manager instance.
-        audio_params (dict): Audio parameters for the interface.
-
-    Returns:
-        gr.Blocks: Configured Gradio interface.
-    """
     with gr.Blocks(title="AI Interview Preparation Platform", theme=gr.themes.Soft(), css="""
     .gradio-container {
         max-width: 900px !important;
@@ -55,26 +37,31 @@ def create_interface(llm, tts, stt, audio_params):
         border-radius: 8px !important;
     }
 """) as demo:
-        # Create audio output component (visible only in debug mode)
-        audio_output = gr.Audio(label="Play audio", autoplay=True, visible=os.environ.get("DEBUG", False), streaming=tts.streaming)
+        login_container, logged_in_state, login_button, username_input, password_input, message, do_login = get_login_ui()
 
-        # Render problem-solving and instructions UI components
-        get_problem_solving_ui(llm, tts, stt, audio_params, audio_output).render()
-        get_instructions_ui(llm, tts, stt, audio_params).render()
-        get_resume_ui(llm)
+        with gr.Column(visible=False) as main_app:
+            audio_output = gr.Audio(label="Play audio", autoplay=True, visible=os.environ.get("DEBUG", False), streaming=tts.streaming)
+
+            get_problem_solving_ui(llm, tts, stt, audio_params, audio_output).render()
+            get_instructions_ui(llm, tts, stt, audio_params).render()
+            get_resume_ui(llm)
+
+        login_button.click(
+            fn=do_login,
+            inputs=[username_input, password_input],
+            outputs=[login_container, main_app, logged_in_state, message],
+        )
 
     return demo
 
 
 def main():
-    """
-    Main function to initialize services and launch the Gradio interface.
-    """
+    init_db()
+
     config, llm, tts, stt = initialize_services()
     demo = create_interface(llm, tts, stt, default_audio_params)
 
-    # Launch the Gradio interface
-    demo.launch(show_api=False, server_name="127.0.0.1", server_port=7860, auth=[("student", "student123"), ("teacher", "teacher123")], auth_message="Demo login — Student: student / student123  |  Teacher: teacher / teacher123")
+    demo.launch(show_api=False, server_name="127.0.0.1", server_port=7860)
 
 
 if __name__ == "__main__":
