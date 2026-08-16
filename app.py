@@ -30,6 +30,10 @@ def initialize_services():
 
 def create_interface(llm, tts, stt, audio_params):
     with gr.Blocks(title="AI Interview Preparation Platform", theme=gr.themes.Soft(), css="""
+    body, .gradio-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf3 50%, #dde6f3 100%) !important;
+        background-attachment: fixed !important;
+    }
     .gradio-container {
         max-width: 900px !important;
         margin: auto !important;
@@ -45,8 +49,8 @@ def create_interface(llm, tts, stt, audio_params):
 
             get_quiz_ui(llm, current_user_state).render()
             get_performance_ui(current_user_state).render()
-            get_instructions_ui(llm, tts, stt, audio_params).render()
             get_resume_ui(llm)
+            get_instructions_ui(llm, tts, stt, audio_params).render()
 
         login_button.click(
             fn=do_login,
