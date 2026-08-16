@@ -126,6 +126,14 @@ def get_quiz_ui(llm: LLMManager, current_user_state: gr.State) -> gr.Tab:
             mins, secs = divmod(remaining, 60)
             return remaining, f"⏱️ Time remaining: {mins:02d}:{secs:02d}", gr.update(active=True), False
 
+        # Only updates the countdown text each second. Does NOT touch the quiz area,
+        # so the page no longer flickers/reflows every tick.
+        timer.tick(
+            fn=tick,
+            inputs=[remaining_seconds],
+            outputs=[remaining_seconds, timer_display, timer, time_expired],
+        )
+
         def finish_quiz(topic, difficulty, questions, username, *answers):
             answers = list(answers)
             feedback, score = llm.grade_quiz(topic, questions, answers)
@@ -138,18 +146,10 @@ def get_quiz_ui(llm: LLMManager, current_user_state: gr.State) -> gr.Tab:
                 gr.update(visible=False),
             )
 
-        def maybe_finish_on_expiry(expired, topic, difficulty, questions, username, *answers):
-            if not expired:
-                return gr.update(), gr.update(), gr.update(), gr.update()
-            return finish_quiz(topic, difficulty, questions, username, *answers)
-
-        timer.tick(
-            fn=tick,
-            inputs=[remaining_seconds],
-            outputs=[remaining_seconds, timer_display, timer, time_expired],
-        ).then(
-            fn=maybe_finish_on_expiry,
-            inputs=[time_expired, topic_select, difficulty_select, questions_state, current_user_state, *answer_boxes],
+        # Fires exactly once, only at the moment time_expired flips from False to True.
+        time_expired.change(
+            fn=finish_quiz,
+            inputs=[topic_select, difficulty_select, questions_state, current_user_state, *answer_boxes],
             outputs=[quiz_area, feedback_area, timer, timer_display],
         )
 
