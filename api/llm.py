@@ -4,6 +4,7 @@ import anthropic
 from utils.errors import APIError
 from typing import List, Dict, Generator, Optional, Tuple, Any
 import logging
+import re
 
 
 class PromptManager:
@@ -331,3 +332,75 @@ class LLMManager:
         for text in self.get_text(messages):
             feedback += text
             yield feedback
+
+    def generate_quiz_questions(self, topic: str, difficulty: str = "Medium") -> List[str]:
+        """
+        Generate exactly 10 quiz questions on the given topic.
+
+        Args:
+            topic (str): The topic for the quiz.
+            difficulty (str): The difficulty level. Defaults to "Medium".
+
+        Returns:
+            List[str]: A list of 10 question strings (without the leading numbers).
+        """
+        system_prompt = self.prompt_manager.get_system_prompt("quiz_question_generation_prompt")
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Topic: {topic}. Difficulty: {difficulty}. Generate the 10 questions now."},
+        ]
+        raw_text = ""
+        for text in self.get_text(messages, stream=False):
+            raw_text += text
+
+        questions = []
+        for line in raw_text.strip().split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            match = re.match(r"^\d+[\.\)]\s*(.+)", line)
+            if match:
+                questions.append(match.group(1).strip())
+
+        # Fallback: if parsing failed to find 10, just take non-empty lines as-is
+        if len(questions) < 10:
+            lines = [l.strip() for l in raw_text.strip().split("\n") if l.strip()]
+            questions = lines[:10]
+
+        return questions[:10]
+
+    def grade_quiz(self, topic: str, questions: List[str], answers: List[str]) -> Tuple[str, Optional[int]]:
+        """
+        Grade a completed quiz based on the questions and the candidate's answers.
+
+        Args:
+            topic (str): The quiz topic.
+            questions (List[str]): The list of 10 questions.
+            answers (List[str]): The list of 10 candidate answers (same order as questions).
+
+        Returns:
+            Tuple[str, Optional[int]]: The full markdown feedback text, and the parsed numeric score out of 100 (None if parsing failed).
+        """
+        system_prompt = self.prompt_manager.get_system_prompt("quiz_grading_prompt")
+
+        qa_text = f"Topic: {topic}\n\n"
+        for i, (q, a) in enumerate(zip(questions, answers), start=1):
+            answer_text = a.strip() if a and a.strip() else "(No answer provided)"
+            qa_text += f"Question {i}: {q}\nCandidate's Answer {i}: {answer_text}\n\n"
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": qa_text},
+        ]
+
+        feedback = ""
+        for text in self.get_text(messages, stream=False):
+            feedback += text
+
+        score = None
+        score_match = re.search(r"Overall Score:\s*(\d{1,3})\s*/\s*100", feedback)
+        if score_match:
+            score = int(score_match.group(1))
+            score = max(0, min(100, score))
+
+        return feedback, score

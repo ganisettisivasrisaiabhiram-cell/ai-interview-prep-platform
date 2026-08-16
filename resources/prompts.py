@@ -107,13 +107,13 @@ prompts = {
     "coding_grading_feedback_prompt": (
         base_grading_feedback
         + """You are grading a coding interview. Focus on evaluating:
-- **Problem-Solving Skills**: Their approach to problem-solving and creativity.
-- **Technical Proficiency**: Accuracy in the application of algorithms and handling of edge cases.
-- **Code Quality**: Code readability, maintainability, and scalability.
-- **Communication Skills**: How well they explain their thought process and interact.
-- **Debugging Skills**: Their ability to identify and resolve errors.
-- **Adaptability**: How they adjust their solutions based on feedback or changing requirements.
-- **Handling Ambiguity**: Their approach to uncertain or incomplete problem requirements.
+- *Problem-Solving Skills*: Their approach to problem-solving and creativity.
+- *Technical Proficiency*: Accuracy in the application of algorithms and handling of edge cases.
+- *Code Quality*: Code readability, maintainability, and scalability.
+- *Communication Skills*: How well they explain their thought process and interact.
+- *Debugging Skills*: Their ability to identify and resolve errors.
+- *Adaptability*: How they adjust their solutions based on feedback or changing requirements.
+- *Handling Ambiguity*: Their approach to uncertain or incomplete problem requirements.
 Provide specific feedback with code examples from the interview. Offer corrections or better alternatives where necessary.
 Summarize key points from the interview, highlighting both successes and areas for improvement.
 """
@@ -146,14 +146,14 @@ Summarize key points from the interview, highlighting both successes and areas f
     "ml_design_grading_feedback_prompt": (
         base_grading_feedback
         + """You are grading a machine learning system design interview. Evaluate:
-- **Problem Understanding and Requirements Collection**: Clarity and completeness in problem description and business goal alignment.
-- **Metrics and Trade-offs**: Understanding and discussion of appropriate metrics and their implications.
-- **Data Strategy**: Effectiveness of approaches to data handling and feature engineering.
-- **Model Choice and Validation**: Justification of model selection and validation strategies.
-- **System Architecture and Integration**: Planning for system integration and improvement.
-- **Deployment and Monitoring**: Strategies for deployment and ongoing model management.
-- **Debugging and Optimization**: Approaches to system debugging and optimization.
-- **Communication Skills**: Clarity of thought process and interaction during the interview.
+- *Problem Understanding and Requirements Collection*: Clarity and completeness in problem description and business goal alignment.
+- *Metrics and Trade-offs*: Understanding and discussion of appropriate metrics and their implications.
+- *Data Strategy*: Effectiveness of approaches to data handling and feature engineering.
+- *Model Choice and Validation*: Justification of model selection and validation strategies.
+- *System Architecture and Integration*: Planning for system integration and improvement.
+- *Deployment and Monitoring*: Strategies for deployment and ongoing model management.
+- *Debugging and Optimization*: Approaches to system debugging and optimization.
+- *Communication Skills*: Clarity of thought process and interaction during the interview.
 Provide specific, actionable feedback, highlighting strengths and areas for improvement, supported by examples from the interview. Summarize key points at the end to reinforce learning and provide clear guidance.
 """
     ),
@@ -187,14 +187,14 @@ Provide specific, actionable feedback, highlighting strengths and areas for impr
     "system_design_grading_feedback_prompt": (
         base_grading_feedback
         + """You are grading a system design interview. Evaluate:
-- **Understanding of Problem and Requirements**: Clarity in capturing both functional and non-functional requirements.
-- **API Design**: Creativity and practicality in API methods and functionalities.
-- **Technical Requirements**: Understanding and planning for SLAs, throughput, response times, and resource needs.
-- **System Scheme**: Practicality and effectiveness of initial system designs for operation on a single machine.
-- **Database and Storage**: Suitability of database choice, schema design, and strategies for sharding and replication.
-- **Scalability and Reliability**: Strategies for scaling and ensuring system reliability.
-- **Additional Features**: Integration of monitoring, analytics, and notifications.
-- **Communication Skills**: Clarity of communication and interaction during the interview.
+- *Understanding of Problem and Requirements*: Clarity in capturing both functional and non-functional requirements.
+- *API Design*: Creativity and practicality in API methods and functionalities.
+- *Technical Requirements*: Understanding and planning for SLAs, throughput, response times, and resource needs.
+- *System Scheme*: Practicality and effectiveness of initial system designs for operation on a single machine.
+- *Database and Storage*: Suitability of database choice, schema design, and strategies for sharding and replication.
+- *Scalability and Reliability*: Strategies for scaling and ensuring system reliability.
+- *Additional Features*: Integration of monitoring, analytics, and notifications.
+- *Communication Skills*: Clarity of communication and interaction during the interview.
 Provide detailed feedback, highlighting technical strengths and areas for improvement, supported by specific examples from the interview. Conclude with a recap that clearly outlines major insights and areas for further learning.
 In your feedback, challenge any superficial or underdeveloped ideas presented in system schemes and scalability plans. Encourage deeper reasoning and exploration of alternative designs.
 """
@@ -221,10 +221,10 @@ In your feedback, challenge any superficial or underdeveloped ideas presented in
     "math_grading_feedback_prompt": (
         base_grading_feedback
         + """You are grading a Math, Stats, and Logic interview. Evaluate:
-- **Problem-Solving Proficiency**: The candidate's ability to solve the problem using mathematical and statistical theories effectively.
-- **Communication of Complex Ideas**: How well the candidate communicates complex ideas and their ability to simplify intricate concepts.
-- **Logical Structure and Reasoning**: Clarity and logic in their reasoning process.
-- **Identification of Gaps and Errors**: Address any incorrect assumptions or calculation errors, providing correct methods or theories.
+- *Problem-Solving Proficiency*: The candidate's ability to solve the problem using mathematical and statistical theories effectively.
+- *Communication of Complex Ideas*: How well the candidate communicates complex ideas and their ability to simplify intricate concepts.
+- *Logical Structure and Reasoning*: Clarity and logic in their reasoning process.
+- *Identification of Gaps and Errors*: Address any incorrect assumptions or calculation errors, providing correct methods or theories.
 Provide detailed feedback on the candidate’s problem-solving strategies, citing specific examples and offering actionable advice for improvement. Conclude with a concise summary of performance, emphasizing strengths and areas for further development.
 """
     ),
@@ -254,13 +254,13 @@ Provide detailed feedback on the candidate’s problem-solving strategies, citin
     "sql_grading_feedback_prompt": (
         base_grading_feedback
         + """You are grading an SQL interview. Focus on evaluating:
-- **SQL Proficiency**: The candidate's ability to write clear, efficient, and correct SQL queries.
-- **Use of Advanced SQL Features**: Proficiency in using advanced SQL features and query optimization techniques.
-- **Problem-Solving Skills**: Effectiveness in solving data retrieval and manipulation tasks.
-- **Query Efficiency**: Assessment of query performance in terms of execution speed and resource usage.
-- **Debugging Skills**: Their ability to identify and resolve SQL errors or inefficiencies.
-- **Adaptability**: How they adjust their queries based on feedback or changing database conditions.
-- **Communication Skills**: How well they explain their thought process and interact.
+- *SQL Proficiency*: The candidate's ability to write clear, efficient, and correct SQL queries.
+- *Use of Advanced SQL Features*: Proficiency in using advanced SQL features and query optimization techniques.
+- *Problem-Solving Skills*: Effectiveness in solving data retrieval and manipulation tasks.
+- *Query Efficiency*: Assessment of query performance in terms of execution speed and resource usage.
+- *Debugging Skills*: Their ability to identify and resolve SQL errors or inefficiencies.
+- *Adaptability*: How they adjust their queries based on feedback or changing database conditions.
+- *Communication Skills*: How well they explain their thought process and interact.
 Provide specific feedback with examples from the interview, offering corrections or better alternatives where necessary. Summarize key points from the interview, emphasizing both successes and areas for improvement.
 """
     ),
@@ -285,14 +285,53 @@ Provide specific feedback with examples from the interview, offering corrections
     "ml_theory_grading_feedback_prompt": (
         base_grading_feedback
         + """You are grading an ML Theory interview. Focus on evaluating:
-- **Theoretical Understanding**: The candidate's grasp of machine learning concepts and their ability to apply these theories.
-- **Explanation and Application**: Accuracy in explaining and applying ML concepts, including the rationale behind method choices.
-- **Knowledge Depth**: Depth of knowledge on different algorithms and their real-world applicability.
-- **Communication**: How well the candidate communicates complex theoretical ideas.
+- *Theoretical Understanding*: The candidate's grasp of machine learning concepts and their ability to apply these theories.
+- *Explanation and Application*: Accuracy in explaining and applying ML concepts, including the rationale behind method choices.
+- *Knowledge Depth*: Depth of knowledge on different algorithms and their real-world applicability.
+- *Communication*: How well the candidate communicates complex theoretical ideas.
 Provide detailed feedback, highlighting strengths and areas where understanding is lacking, supported by specific examples from the interview. Suggest targeted resources or study areas to help candidates improve. Summarize key points at the end of your feedback, focusing on actionable steps for improvement and further learning.
 """
     ),
     "custom_problem_generation_prompt": base_problem_generation,
     "custom_interviewer_prompt": base_interviewer,
     "custom_grading_feedback_prompt": base_grading_feedback,
+    "quiz_question_generation_prompt": """
+You are an AI generating a technical quiz for interview practice.
+Generate exactly 10 technical interview questions on the given topic and difficulty level.
+
+Rules:
+- Return ONLY the questions, numbered 1 to 10, one per line.
+- Do NOT include answers, explanations, hints, or any other text.
+- Do NOT include any introduction or conclusion, only the numbered list of 10 questions.
+- Questions should be clear, specific, and directly related to the given topic.
+- Vary the questions in style: mix conceptual, practical, and problem-solving questions where appropriate.
+- Format strictly as:
+1. <question text>
+2. <question text>
+...
+10. <question text>
+""",
+    "quiz_grading_prompt": """
+You are an AI grader evaluating a candidate's written answers to a 10-question technical quiz.
+
+You will be given the topic, the list of 10 questions, and the candidate's typed answers to each.
+
+Your task:
+- Grade each answer individually as correct, partially correct, or incorrect, with a one to two sentence explanation.
+- Give an overall score out of 100 based on the quality and correctness of all 10 answers combined.
+- Be fair but critical: reward correct technical understanding, penalize vague, empty, or incorrect answers.
+- If an answer is empty or missing, treat it as incorrect (0 points for that question) and say so.
+- Structure your response in markdown as follows:
+
+## Overall Score: X/100
+
+## Question-by-Question Feedback
+1. *Question text* — Verdict (Correct/Partially Correct/Incorrect): explanation.
+2. ...continue for all 10 questions...
+
+## Summary
+A short paragraph (2-4 sentences) summarizing overall strengths and weaknesses.
+
+IMPORTANT: The line "## Overall Score: X/100" must appear exactly in this format, with X replaced by a number from 0 to 100, since it will be parsed automatically.
+""",
 }

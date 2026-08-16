@@ -16,12 +16,13 @@ def get_login_ui():
             register_button = gr.Button("Register")
 
     logged_in_state = gr.State(False)
+    current_user_state = gr.State("")
 
     def do_login(username, password):
         if check_login(username, password):
-            return gr.update(visible=False), gr.update(visible=True), True, ""
+            return gr.update(visible=False), gr.update(visible=True), True, "", username
         else:
-            return gr.update(visible=True), gr.update(visible=False), False, "❌ Invalid username or password."
+            return gr.update(visible=True), gr.update(visible=False), False, "❌ Invalid username or password.", ""
 
     def do_register(username, password):
         success, msg = register_user(username, password)
@@ -34,4 +35,4 @@ def get_login_ui():
         outputs=[message],
     )
 
-    return login_container, logged_in_state, login_button, username_input, password_input, message, do_login
+    return login_container, logged_in_state, login_button, username_input, password_input, message, do_login, current_user_state

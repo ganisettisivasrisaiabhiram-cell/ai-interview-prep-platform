@@ -5,9 +5,10 @@ from api.audio import STTManager, TTSManager
 from api.llm import LLMManager
 from utils.config import Config
 from resources.prompts import prompts
-from ui.coding import get_problem_solving_ui
+from ui.quiz import get_quiz_ui
 from ui.instructions import get_instructions_ui
 from ui.resume import get_resume_ui
+from ui.performance import get_performance_ui
 from utils.auth_db import init_db, register_user, check_login
 from utils.params import default_audio_params
 from ui.login import get_login_ui
@@ -37,19 +38,20 @@ def create_interface(llm, tts, stt, audio_params):
         border-radius: 8px !important;
     }
 """) as demo:
-        login_container, logged_in_state, login_button, username_input, password_input, message, do_login = get_login_ui()
+        login_container, logged_in_state, login_button, username_input, password_input, message, do_login, current_user_state = get_login_ui()
 
         with gr.Column(visible=False) as main_app:
             audio_output = gr.Audio(label="Play audio", autoplay=True, visible=os.environ.get("DEBUG", False), streaming=tts.streaming)
 
-            get_problem_solving_ui(llm, tts, stt, audio_params, audio_output).render()
+            get_quiz_ui(llm, current_user_state).render()
+            get_performance_ui(current_user_state).render()
             get_instructions_ui(llm, tts, stt, audio_params).render()
             get_resume_ui(llm)
 
         login_button.click(
             fn=do_login,
             inputs=[username_input, password_input],
-            outputs=[login_container, main_app, logged_in_state, message],
+            outputs=[login_container, main_app, logged_in_state, message, current_user_state],
         )
 
     return demo
