@@ -7,7 +7,7 @@ INTRO = """
 
 This is an AI-powered Interview Preparation Platform built to help students and job seekers practice technical interview questions on their own, at their own pace.
 
-*What it does:*
+**What it does:**
 - Generates a 10-question technical quiz on a topic and difficulty level of your choice.
 - Lets you type your answers within a time limit, just like a real quick-fire interview round.
 - Uses AI to grade your answers, giving you a score out of 100 and detailed question-by-question feedback.
@@ -21,19 +21,19 @@ INTERFACE = """
 # How to Use the Interview Tab
 
 ### 1. Set up your quiz
-Choose a *Topic, **Difficulty, and **Time limit* (in minutes), then click *"Generate Questions"*.
+Choose a **Topic**, **Difficulty**, and **Time limit** (in minutes), then click **"Generate Questions"**.
 
 ### 2. Answer the questions
 The AI will generate 10 technical questions on your chosen topic. Type your answer directly in the box below each question. A countdown timer at the top shows how much time you have left for the whole quiz.
 
 ### 3. Finish the quiz
-Click *"Finish Interview"* at any time to submit your answers early, or let the timer run out — your answers will be submitted automatically when time is up.
+Click **"Finish Interview"** at any time to submit your answers early, or let the timer run out — your answers will be submitted automatically when time is up.
 
 ### 4. Review your feedback
 You'll see an overall score out of 100, along with feedback on each individual question explaining what was correct, partially correct, or incorrect.
 
 ### 5. Track your progress
-Visit the *Performance* tab to see a chart of your scores over time, along with a full history table of every quiz you've taken.
+Visit the **Performance** tab to see a chart of your scores over time, along with a full history table of every quiz you've taken.
 """
 
 

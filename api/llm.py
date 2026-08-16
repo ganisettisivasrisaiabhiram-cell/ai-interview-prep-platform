@@ -224,7 +224,6 @@ class LLMManager:
         """
         system_prompt = self.prompt_manager.get_system_prompt(f"{interview_type}_interviewer_prompt")
         return [{"role": "system", "content": f"{system_prompt}\nThe candidate is solving the following problem:\n {problem}"}]
-
     def get_problem_prepare_messages(self, requirements: str, difficulty: str, topic: str, interview_type: str) -> List[Dict[str, str]]:
         """
         Prepare messages for generating a problem based on given requirements.
@@ -332,7 +331,6 @@ class LLMManager:
         for text in self.get_text(messages):
             feedback += text
             yield feedback
-
     def generate_quiz_questions(self, topic: str, difficulty: str = "Medium") -> List[str]:
         """
         Generate exactly 10 quiz questions on the given topic.
@@ -344,7 +342,8 @@ class LLMManager:
         Returns:
             List[str]: A list of 10 question strings (without the leading numbers).
         """
-        system_prompt = self.prompt_manager.get_system_prompt("quiz_question_generation_prompt")
+        prompt_key = "hr_question_generation_prompt" if "hr" in topic.strip().lower() else "quiz_question_generation_prompt"
+        system_prompt = self.prompt_manager.get_system_prompt(prompt_key)
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Topic: {topic}. Difficulty: {difficulty}. Generate the 10 questions now."},
@@ -381,12 +380,76 @@ class LLMManager:
         Returns:
             Tuple[str, Optional[int]]: The full markdown feedback text, and the parsed numeric score out of 100 (None if parsing failed).
         """
-        system_prompt = self.prompt_manager.get_system_prompt("quiz_grading_prompt")
+        prompt_key = "hr_grading_prompt" if "hr" in topic.strip().lower() else "quiz_grading_prompt"
+        system_prompt = self.prompt_manager.get_system_prompt(prompt_key)
 
         qa_text = f"Topic: {topic}\n\n"
         for i, (q, a) in enumerate(zip(questions, answers), start=1):
             answer_text = a.strip() if a and a.strip() else "(No answer provided)"
             qa_text += f"Question {i}: {q}\nCandidate's Answer {i}: {answer_text}\n\n"
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": qa_text},
+        ]
+
+        feedback = ""
+        for text in self.get_text(messages, stream=False):
+            feedback += text
+
+        score = None
+        score_match = re.search(r"Overall Score:\s*(\d{1,3})\s*/\s*100", feedback)
+        if score_match:
+            score = int(score_match.group(1))
+            score = max(0, min(100, score))
+
+        return feedback, score
+    def generate_coding_challenges(self, topic: str, difficulty: str = "Medium") -> List[str]:
+        """
+        Generate exactly 3 coding problems on the given topic.
+
+        Args:
+            topic (str): The topic for the coding challenges.
+            difficulty (str): The difficulty level. Defaults to "Medium".
+
+        Returns:
+            List[str]: A list of 3 problem statement strings (markdown formatted).
+        """
+        system_prompt = self.prompt_manager.get_system_prompt("coding_challenge_generation_prompt")
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Topic: {topic}. Difficulty: {difficulty}. Generate the 3 coding problems now."},
+        ]
+        raw_text = ""
+        for text in self.get_text(messages, stream=False):
+            raw_text += text
+
+        problems = [p.strip() for p in raw_text.split("---PROBLEM---") if p.strip()]
+
+        # Fallback: if parsing didn't yield 3 problems, pad with a generic message
+        while len(problems) < 3:
+            problems.append("Problem could not be generated. Please try generating again.")
+
+        return problems[:3]
+
+    def grade_coding_challenges(self, topic: str, problems: List[str], code_answers: List[str]) -> Tuple[str, Optional[int]]:
+        """
+        Grade completed coding challenges based on the problems and the candidate's submitted code.
+
+        Args:
+            topic (str): The coding challenge topic.
+            problems (List[str]): The list of 3 problem statements.
+            code_answers (List[str]): The list of 3 candidate code submissions (same order as problems).
+
+        Returns:
+            Tuple[str, Optional[int]]: The full markdown feedback text, and the parsed numeric score out of 100 (None if parsing failed).
+        """
+        system_prompt = self.prompt_manager.get_system_prompt("coding_challenge_grading_prompt")
+
+        qa_text = f"Topic: {topic}\n\n"
+        for i, (p, a) in enumerate(zip(problems, code_answers), start=1):
+            code_text = a.strip() if a and a.strip() else "(No code submitted)"
+            qa_text += f"Problem {i}: {p}\nCandidate's Code {i}:\n{code_text}\n\n"
 
         messages = [
             {"role": "system", "content": system_prompt},

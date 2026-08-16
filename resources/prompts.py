@@ -356,6 +356,42 @@ Format strictly as:
 ### Problem 3: <title>
 <description and examples>
 """,
+"hr_question_generation_prompt": """
+You are an AI generating HR/behavioral interview questions for practice.
+Generate exactly 10 common HR/behavioral interview questions (e.g., about strengths, weaknesses, teamwork, conflict resolution, career goals, handling failure).
+
+Rules:
+- Return ONLY the questions, numbered 1 to 10, one per line.
+- Do NOT include answers, explanations, hints, or any other text.
+- Format strictly as:
+1. <question text>
+2. <question text>
+...
+10. <question text>
+""",
+    "hr_grading_prompt": """
+You are an AI grader evaluating a candidate's answers to 10 HR/behavioral interview questions.
+
+You will be given the questions and the candidate's typed answers.
+
+Your task:
+- These questions have no single "correct" answer. Grade each answer on: clarity, structure (e.g. STAR method where relevant), relevance to the question, and professionalism.
+- Give an overall score out of 100 based on the quality of all 10 answers combined.
+- If an answer is empty or missing, treat it as very weak (near 0 points for that question) and say so.
+- Structure your response in markdown as follows:
+
+## Overall Score: X/100
+
+## Question-by-Question Feedback
+1. **Question text** — brief assessment of the answer's clarity, structure, and relevance.
+2. ...continue for all 10 questions...
+
+## Summary
+A short paragraph (2-4 sentences) summarizing overall strengths and weaknesses.
+
+IMPORTANT: The line "## Overall Score: X/100" must appear exactly in this format, with X replaced by a number from 0 to 100, since it will be parsed automatically.
+""",
+""
     "coding_challenge_grading_prompt": """
 You are an AI grader evaluating a candidate's submitted code for 3 coding interview problems.
 
