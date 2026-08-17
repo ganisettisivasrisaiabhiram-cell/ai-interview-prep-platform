@@ -14,10 +14,6 @@ QUIZ_TOPICS = [
     "Python",
     "Machine Learning Basics",
     "Web Development",
-    "mathematics",
-    "Aptitude",
-    "English/verbal",
-     "HR/Behavioral",
 ]
 
 NUM_QUESTIONS = 10
@@ -162,7 +158,7 @@ def get_quiz_ui(llm: LLMManager, current_user_state: gr.State) -> gr.Tab:
                 gr.update(value=f"⏱ Time remaining: {mins:02d}:{secs:02d}", visible=True),
                 gr.update(active=True),
                 gr.update(visible=False),
-                )
+            )
 
         def dispatch_generate(quiz_type, topic, difficulty, time_limit):
             if quiz_type == "Coding Challenges":
@@ -202,6 +198,7 @@ def get_quiz_ui(llm: LLMManager, current_user_state: gr.State) -> gr.Tab:
                 feedback_area,
             ],
         )
+
         def tick(remaining):
             remaining -= 1
             if remaining <= 0:
@@ -226,6 +223,7 @@ def get_quiz_ui(llm: LLMManager, current_user_state: gr.State) -> gr.Tab:
                 gr.update(value=score_text + feedback, visible=True),
                 gr.update(active=False),
                 gr.update(visible=False),
+                gr.update(interactive=True),
             )
 
         def finish_coding(topic, difficulty, problems, username, *code_answers):
@@ -239,6 +237,7 @@ def get_quiz_ui(llm: LLMManager, current_user_state: gr.State) -> gr.Tab:
                 gr.update(value=score_text + feedback, visible=True),
                 gr.update(active=False),
                 gr.update(visible=False),
+                gr.update(interactive=True),
             )
 
         def dispatch_finish(mode, topic, difficulty, questions, username, *all_answers):
@@ -253,19 +252,19 @@ def get_quiz_ui(llm: LLMManager, current_user_state: gr.State) -> gr.Tab:
         time_expired.change(
             fn=dispatch_finish,
             inputs=[active_mode_state, topic_select, difficulty_select, questions_state, current_user_state, *code_boxes, *answer_boxes],
-            outputs=[quiz_area, coding_area, feedback_area, timer, timer_display],
+            outputs=[quiz_area, coding_area, feedback_area, timer, timer_display, generate_btn],
         )
 
         finish_btn.click(
             fn=finish_quiz,
             inputs=[topic_select, difficulty_select, questions_state, current_user_state, *answer_boxes],
-            outputs=[quiz_area, coding_area, feedback_area, timer, timer_display],
+            outputs=[quiz_area, coding_area, feedback_area, timer, timer_display, generate_btn],
         )
 
         finish_coding_btn.click(
             fn=finish_coding,
             inputs=[topic_select, difficulty_select, questions_state, current_user_state, *code_boxes],
-            outputs=[quiz_area, coding_area, feedback_area, timer, timer_display],
+            outputs=[quiz_area, coding_area, feedback_area, timer, timer_display, generate_btn],
         )
 
     return quiz_tab

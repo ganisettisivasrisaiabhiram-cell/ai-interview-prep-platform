@@ -62,6 +62,36 @@ def check_login(username, password):
     return False
 
 
+def change_password(username: str, old_password: str, new_password: str) -> Tuple[bool, str]:
+    """
+    Change a user's password after verifying their current password.
+
+    Args:
+        username (str): The logged-in user's username.
+        old_password (str): The user's current password, for verification.
+        new_password (str): The new password to set.
+
+    Returns:
+        Tuple[bool, str]: (success, message)
+    """
+    if not new_password:
+        return False, "New password cannot be empty."
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
+    row = cursor.fetchone()
+
+    if not row or row[0] != old_password:
+        conn.close()
+        return False, "Current password is incorrect."
+
+    cursor.execute("UPDATE users SET password = ? WHERE username = ?", (new_password, username))
+    conn.commit()
+    conn.close()
+    return True, "Password changed successfully."
+
+
 def save_quiz_result(
     username: str,
     topic: str,

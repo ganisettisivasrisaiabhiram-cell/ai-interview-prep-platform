@@ -9,6 +9,7 @@ from ui.quiz import get_quiz_ui
 from ui.instructions import get_instructions_ui
 from ui.resume import get_resume_ui
 from ui.performance import get_performance_ui
+from ui.profile import get_profile_ui
 from utils.auth_db import init_db, register_user, check_login
 from utils.params import default_audio_params
 from ui.login import get_login_ui
@@ -50,6 +51,7 @@ def create_interface(llm, tts, stt, audio_params):
             get_quiz_ui(llm, current_user_state).render()
             get_performance_ui(current_user_state).render()
             get_resume_ui(llm)
+            get_profile_ui(current_user_state).render()
             get_instructions_ui(llm, tts, stt, audio_params).render()
 
         login_button.click(
